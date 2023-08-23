@@ -27,6 +27,18 @@ class CustomUrlShortenerApplicationTests {
         assertTrue(isShortened);
 
     }
+    @Test
+    void checkThatFullUrlIsRetrivedWithShortenedUrl(){
+        String fullUrl = "http://jebfbeiwbiuifjjbdfusfbeuifbiuirDS97H43e4e-6tghg6v";
+
+        ShortenedUrlResponse shortenedUrlResponse =
+                urlServices.shortenUrl(fullUrl);
+
+        String shortenedUrl = shortenedUrlResponse.getReplacedUrl();
+
+        String fullUrlFound = urlServices.retrieveFullUrl(shortenedUrl);
+        assertEquals(fullUrl, fullUrlFound);
+    }
 
 
 }

@@ -1,15 +1,19 @@
 package com.urlshortener.customurlshortener.model;
 
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
 @Document
+@Data
+@Builder
 public class Url {
     @Id
     private String Id;
-    private String ActualUrlLink;
+    private String actualUrlLink;
     private String urlReplacementLink;
     private String userId;
     private String description;
