@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
-@Document
+@Document("UrlPilot-Url")
 @Data
 @Builder
 public class Url {

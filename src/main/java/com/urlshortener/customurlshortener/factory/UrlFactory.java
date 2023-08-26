@@ -1,20 +1,23 @@
 package com.urlshortener.customurlshortener.factory;
 
 import com.urlshortener.customurlshortener.Utils.AppUtils;
+import com.urlshortener.customurlshortener.dto.requests.UrlBuildRequest;
+import com.urlshortener.customurlshortener.exceptions.CustomUrlAlreadyExistException;
 import com.urlshortener.customurlshortener.model.Url;
 import com.urlshortener.customurlshortener.repositorie.UrlRepositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
+
+import static com.urlshortener.customurlshortener.model.CustomMessage.URL_ALREADY_EXIST;
+
 @Component
 public class UrlFactory {
     @Autowired
     private UrlRepositories urlRepositories;
-    private static final String companyLink = "http://tinyurls.at/";
+    private static final String companyLink = "http://urlpilot.at/";
     private static Character [] capitalLetters = AppUtils.getCapitalLetters();
     private static Character [] smallLetters = AppUtils.getSmallLetters();
     private static final Random random = new Random();
@@ -56,10 +59,34 @@ public class UrlFactory {
         int length = 3 + random.nextInt(4);
         return length;
     }
+    public Url buildUrl(UrlBuildRequest urlBuildRequest) {
+        return Url.builder()
+                .actualUrlLink(urlBuildRequest.getActualUrlLink())
+                .urlReplacementLink(urlBuildRequest.getUrlReplacementLink())
+                .build();
+    }
+    public Url buildUrl(String actualUrlLink, String replacementUrl) {
+        return Url.builder()
+                .actualUrlLink(actualUrlLink)
+                .urlReplacementLink(replacementUrl)
+                .build();
+    }
+    public void checkUrlIsUrlFree(String customUrl) {
+
+        urlRepositories
+                .findUrlByUrlReplacementLink(customUrl)
+                .ifPresent((value)->{
+                    throw new CustomUrlAlreadyExistException(URL_ALREADY_EXIST);
+                });
+
+//        Optional<Url> optionalUrl = urlRepositories
+//                                        .findUrlByUrlReplacementLink(customUrl);
+//                if(optionalUrl.isPresent())
+//                    throw new CustomUrlAlreadyExistException(URL_ALREADY_EXIST);
 
 
 
-
+    }
 }
 
 

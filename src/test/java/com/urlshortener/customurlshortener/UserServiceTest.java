@@ -17,7 +17,7 @@ public class UserServiceTest {
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .email("nedfirst@gmail.com")
                 .password("P@ssw0rd")
-                .username("ned")
+                .userName("ned")
                 .build();
 
 
