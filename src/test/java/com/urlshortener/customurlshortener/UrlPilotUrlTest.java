@@ -70,5 +70,9 @@ class UrlPilotUrlTest {
          assertThrows( CustomUrlAlreadyExistException.class, ()-> urlServices.customizeUrl(fullUrl, customizedUrlChoice));
 
     }
+    Test
+    void checkThatImproperUrlIsNotUsed(){
+
+    }
 
 }

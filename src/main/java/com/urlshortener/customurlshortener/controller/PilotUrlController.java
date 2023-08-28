@@ -9,14 +9,16 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 
 @RequestMapping("/urlpilot")
+
 @CrossOrigin("*")
 public class PilotUrlController {
-        UrlService urlService;
+        private final UrlService urlService;
 
-        @PostMapping("/shortenUrl")
-    public ShortenedUrlResponse shortenUrl(@PathVariable String completeUrl) {
-            System.out.println(completeUrl);
-        return urlService.shortenUrl(completeUrl);
+        @PostMapping("/shortenUrl/")
+    public ShortenedUrlResponse shortenUrl( String completeUrl) {
+            ShortenedUrlResponse response = urlService.shortenUrl(completeUrl);
+//            System.out.println(response);
+        return response;
     }
     @GetMapping("")
     public String retrieveUrl(@PathVariable String requestedUrl) {

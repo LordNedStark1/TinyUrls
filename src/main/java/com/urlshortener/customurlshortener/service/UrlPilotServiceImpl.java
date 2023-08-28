@@ -24,18 +24,17 @@ public class UrlPilotServiceImpl implements UrlService {
 
         String replacementUrl = urlFactory.shortenUrl();
 
-//        UrlBuildRequest urlBuildRequest = UrlBuildRequest.builder()
-//                                            .actualUrlLink(actualUrlLink)
-//                                            .urlReplacementLink(replacementUrl)
-//                                            .build();
-
         Url url = urlFactory.buildUrl(actualUrlLink, replacementUrl);
 
         Url savedUrl = urlRepositories.save(url);
 
-        return ShortenedUrlResponse.builder()
-                .replacedUrl(savedUrl.getUrlReplacementLink())
-                .build();
+        ShortenedUrlResponse shortenedUrlResponse = new ShortenedUrlResponse();
+        shortenedUrlResponse.setCompleteUrl(savedUrl.getActualUrlLink());
+        shortenedUrlResponse.setReplacedUrl(savedUrl.getUrlReplacementLink());
+
+
+
+        return shortenedUrlResponse;
     }
 
     @Override
@@ -56,9 +55,7 @@ public class UrlPilotServiceImpl implements UrlService {
 
         Url savedUrl = urlRepositories.save(url);
 
-        return ShortenedUrlResponse.builder()
-                .replacedUrl(savedUrl.getUrlReplacementLink())
-                .build();
+        return null;
     }
 
 }

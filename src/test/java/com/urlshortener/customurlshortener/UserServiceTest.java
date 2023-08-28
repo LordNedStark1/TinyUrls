@@ -14,11 +14,7 @@ public class UserServiceTest {
     private UserService userService;
     @Test
     public void testThatUserCanSignUp(){
-        SignUpRequest signUpRequest = SignUpRequest.builder()
-                .email("nedfirst@gmail.com")
-                .password("P@ssw0rd")
-                .userName("ned")
-                .build();
+        SignUpRequest signUpRequest = buildSignUpRequest("email@gmail.com");
 
 
         SignUpResponse signUpResponse = userService.signUp(signUpRequest);
@@ -26,4 +22,20 @@ public class UserServiceTest {
         assertEquals(signUpResponse.getMessage(), "Successfully signed up");
         assertEquals(signUpResponse.getEmail(), "nedfirst@gmail.com");
         assertEquals(signUpResponse.getUserName(), "ned");
-    }}
+    }
+    @Test
+    public void testThatUserCanLogIn(){
+        SignUpRequest signUpRequest =buildSignUpRequest("emailben@gmail.com");
+
+
+        SignUpResponse signUpResponse = userService.signUp(signUpRequest);
+    }
+    private SignUpRequest buildSignUpRequest(String email){
+
+        return  SignUpRequest.builder()
+                .email(email)
+                .password("P@ssw0rd")
+                .userName("ned")
+                .build();
+    }
+}
