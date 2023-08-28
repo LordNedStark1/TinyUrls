@@ -38,13 +38,13 @@ public class UrlPilotServiceImpl implements UrlService {
     }
 
     @Override
-    public String retrieveFullUrl(String shortenedUrl) {
+    public String retrieveFullUrl(String shortenedUrl){
         Optional<Url> optionalUrl =  urlRepositories.findUrlByUrlReplacementLink(shortenedUrl);
         if (optionalUrl.isPresent()){
             Url url = optionalUrl.get();
             return url.getActualUrlLink();
         }
-        throw new UrlNotFoundException(URL_NOT_FOUND);
+        throw new UrlNotFoundException(URL_NOT_FOUND.getMessage());
     }
 
     @Override

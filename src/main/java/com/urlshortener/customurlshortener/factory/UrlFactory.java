@@ -76,7 +76,7 @@ public class UrlFactory {
         urlRepositories
                 .findUrlByUrlReplacementLink(customUrl)
                 .ifPresent((value)->{
-                    throw new CustomUrlAlreadyExistException(URL_ALREADY_EXIST);
+                    throw new CustomUrlAlreadyExistException(URL_ALREADY_EXIST.getMessage());
                 });
 
 //        Optional<Url> optionalUrl = urlRepositories

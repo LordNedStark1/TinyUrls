@@ -44,8 +44,8 @@ class UrlPilotUrlTest {
     @Test
     void TestThatCustomNameCanUsedAsShortUrl(){
         String customizedUrlChoice = "nedCo";
-        ShortenedUrlResponse shortenedUrlResponse = ShortenedUrlResponse.builder()
-                                                        .replacedUrl(customizedUrlChoice).build();
+        ShortenedUrlResponse shortenedUrlResponse = new ShortenedUrlResponse();
+        shortenedUrlResponse.setCompleteUrl(customizedUrlChoice);
         try {
             shortenedUrlResponse =
                     urlServices.customizeUrl(fullUrl, customizedUrlChoice);
@@ -60,8 +60,9 @@ class UrlPilotUrlTest {
     void testThatCustomUrlCanNotBeUsedTwice(){
         String customizedUrlChoice = "nedCo";
 
-        ShortenedUrlResponse shortenedUrlResponse = ShortenedUrlResponse.builder()
-                .replacedUrl(customizedUrlChoice).build();
+        ShortenedUrlResponse shortenedUrlResponse = new ShortenedUrlResponse();
+        shortenedUrlResponse.setCompleteUrl(customizedUrlChoice);
+
          try {
             shortenedUrlResponse =
                     urlServices.customizeUrl(fullUrl, customizedUrlChoice);
@@ -70,7 +71,7 @@ class UrlPilotUrlTest {
          assertThrows( CustomUrlAlreadyExistException.class, ()-> urlServices.customizeUrl(fullUrl, customizedUrlChoice));
 
     }
-    Test
+    @Test
     void checkThatImproperUrlIsNotUsed(){
 
     }
