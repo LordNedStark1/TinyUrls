@@ -1,7 +1,9 @@
 package com.urlshortener.customurlshortener.service;
 
+import com.urlshortener.customurlshortener.dto.requests.BuildUrlRequest;
 import com.urlshortener.customurlshortener.dto.requests.SignUpRequest;
 import com.urlshortener.customurlshortener.dto.response.LoginResponse;
+import com.urlshortener.customurlshortener.dto.response.ShortenedUrlResponse;
 import com.urlshortener.customurlshortener.dto.response.SignUpResponse;
 import com.urlshortener.customurlshortener.exceptions.InvalidCredentialsException;
 import com.urlshortener.customurlshortener.exceptions.UserAlreadyExistsException;
@@ -19,6 +21,7 @@ import static com.urlshortener.customurlshortener.model.CustomMessage.USER_ALREA
 @AllArgsConstructor
 public class UrlPilotUserService implements UserService {
     private final UserRepository userRepository;
+    private final UrlService urlService;
     @Override
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         User user = new User();
@@ -53,9 +56,14 @@ public class UrlPilotUserService implements UserService {
         return userPassword.equals(password);
     }
 
-    private User findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(
                         ()-> new InvalidCredentialsException("User Not Found Exception"));
+    }
+
+    @Override
+    public ShortenedUrlResponse shortenUrl(BuildUrlRequest buildUrlRequest) {
+        return urlService.shortenUrl(buildUrlRequest);
     }
 
     private void validateEmail(String email) {

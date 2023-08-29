@@ -1,6 +1,7 @@
 package com.urlshortener.customurlshortener.factory;
 
 import com.urlshortener.customurlshortener.Utils.AppUtils;
+import com.urlshortener.customurlshortener.dto.requests.BuildUrlRequest;
 import com.urlshortener.customurlshortener.dto.requests.UrlBuildRequest;
 import com.urlshortener.customurlshortener.exceptions.CustomUrlAlreadyExistException;
 import com.urlshortener.customurlshortener.model.Url;
@@ -65,6 +66,13 @@ public class UrlFactory {
                 .urlReplacementLink(urlBuildRequest.getUrlReplacementLink())
                 .build();
     }
+    public Url buildUrl(BuildUrlRequest buildUrlRequest) {
+        return Url.builder()
+                .actualUrlLink(buildUrlRequest.getActualUrlLink())
+                .urlReplacementLink(buildUrlRequest.getUrlReplacementLink())
+                .description(buildUrlRequest.getDescription())
+                .build();
+    }
     public Url buildUrl(String actualUrlLink, String replacementUrl) {
         return Url.builder()
                 .actualUrlLink(actualUrlLink)
@@ -87,6 +95,8 @@ public class UrlFactory {
 
 
     }
+
+
 }
 
 

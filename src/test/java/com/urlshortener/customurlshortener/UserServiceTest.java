@@ -8,7 +8,6 @@ import com.urlshortener.customurlshortener.dto.response.SignUpResponse;
 import com.urlshortener.customurlshortener.exceptions.InvalidCredentialsException;
 import com.urlshortener.customurlshortener.exceptions.UrlBaseException;
 import com.urlshortener.customurlshortener.exceptions.UserAlreadyExistsException;
-import com.urlshortener.customurlshortener.service.UrlService;
 import com.urlshortener.customurlshortener.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserServiceTest {
     @Autowired
     private UserService userService;
-    private UrlService urlService;
+
 
     private String fullUrl = "http://jebfbeiwbiuifjjbdfusfbeuifbiuirDS97H43e4e-6tghg6v";
     @Test
@@ -82,11 +81,22 @@ public class UserServiceTest {
 
         BuildUrlRequest buildUrlRequest = BuildUrlRequest.builder()
                 .actualUrlLink(fullUrl)
+                .email(signUpRequest.getEmail())
                 .description("link to no were")
                 .build();
 
         ShortenedUrlResponse shortenedUrlResponse =
-                            urlService.shortenUrl( buildUrlRequest);
+                            userService.shortenUrl( buildUrlRequest);
+
+        int shortenedUrlLength = shortenedUrlResponse.getReplacedUrl().length();
+        boolean isShortened = shortenedUrlLength > 22 && shortenedUrlLength < 25;
+
+        boolean isShorterThanActual = fullUrl.length() > shortenedUrlLength;
+
+        assertTrue(isShorterThanActual);
+        assertTrue(isShortened);
+        assertEquals(shortenedUrlResponse.getCompleteUrl(), fullUrl);
+
     }
     private SignUpRequest buildSignUpRequest(String email){
 

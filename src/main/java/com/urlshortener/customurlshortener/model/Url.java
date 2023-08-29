@@ -18,5 +18,9 @@ public class Url {
     private String userId;
     private String description;
     private String numberOfClicks;
-    private LocalDate date = LocalDate.now();
+    private LocalDate date;
+
+    public void setDate(){
+        date  = LocalDate.now();
+    }
 }

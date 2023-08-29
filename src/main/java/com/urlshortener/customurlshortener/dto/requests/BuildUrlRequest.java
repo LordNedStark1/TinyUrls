@@ -6,13 +6,13 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Builder
-@@Setter
+@Setter
 @Getter
 @ToString
 
 public class BuildUrlRequest {
     private String actualUrlLink;
     private String urlReplacementLink;
-
+    private String email;
     private String description;
 }
