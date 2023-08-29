@@ -1,5 +1,6 @@
 package com.urlshortener.customurlshortener.service;
 
+import com.urlshortener.customurlshortener.dto.requests.BuildUrlRequest;
 import com.urlshortener.customurlshortener.dto.response.ShortenedUrlResponse;
 import com.urlshortener.customurlshortener.exceptions.UrlNotFoundException;
 import com.urlshortener.customurlshortener.factory.UrlFactory;
@@ -36,6 +37,20 @@ public class UrlPilotServiceImpl implements UrlService {
 
         return shortenedUrlResponse;
     }
+    @Override
+    public ShortenedUrlResponse shortenUrl(BuildUrlRequest buildUrlRequest) {
+
+        String replacementUrl = urlFactory.shortenUrl();
+        buildUrlRequest.setUrlReplacementLink(replacementUrl);
+        
+
+
+        Url url = urlFactory.buildUrl(buildUrlRequest);
+
+
+        return null;
+    }
+
 
     @Override
     public String retrieveFullUrl(String shortenedUrl){
@@ -57,5 +72,6 @@ public class UrlPilotServiceImpl implements UrlService {
 
         return null;
     }
+
 
 }
