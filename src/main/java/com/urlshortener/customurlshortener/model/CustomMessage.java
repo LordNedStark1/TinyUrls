@@ -1,9 +1,10 @@
 package com.urlshortener.customurlshortener.model;
 
 public enum CustomMessage {
-    URL_ALREADY_EXIST("url already exists"),
-    URL_NOT_FOUND("url not found"),
-    USER_ALREADY_EXIST("user already exists"),
+    URL_ALREADY_EXIST("Url Already Exists"),
+    URL_NOT_FOUND("Url not Found"),
+    IMPROPER_URL_EXCEPTION("Improper Url Exception"),
+    USER_ALREADY_EXIST("User Already Exists"),
     LOGIN_SUCCESSFUL("Login SuccessFUL");
 
     private final String message;

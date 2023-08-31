@@ -1,15 +1,15 @@
 package com.urlshortener.customurlshortener.service;
 
 import com.urlshortener.customurlshortener.dto.requests.BuildUrlRequest;
-import com.urlshortener.customurlshortener.dto.response.ShortenedUrlResponse;
+import com.urlshortener.customurlshortener.dto.response.ModifiedUrlResponse;
 
 public interface UrlService {
 
-    ShortenedUrlResponse shortenUrl(String actualUrlLink);
+    ModifiedUrlResponse shortenUrl(String actualUrlLink);
 
-    ShortenedUrlResponse shortenUrl(BuildUrlRequest buildUrlRequest);
+    ModifiedUrlResponse shortenUrl(BuildUrlRequest buildUrlRequest, String userId);
     String retrieveFullUrl(String shortenedUrl);
 
-    ShortenedUrlResponse customizeUrl(String fullUrl, String customizedUrlChoice);
+    ModifiedUrlResponse customizeUrl(String fullUrl, String customizedUrlChoice);
 
 }

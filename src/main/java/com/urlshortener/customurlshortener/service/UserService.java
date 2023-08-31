@@ -3,7 +3,7 @@ package com.urlshortener.customurlshortener.service;
 import com.urlshortener.customurlshortener.dto.requests.BuildUrlRequest;
 import com.urlshortener.customurlshortener.dto.requests.SignUpRequest;
 import com.urlshortener.customurlshortener.dto.response.LoginResponse;
-import com.urlshortener.customurlshortener.dto.response.ShortenedUrlResponse;
+import com.urlshortener.customurlshortener.dto.response.ModifiedUrlResponse;
 import com.urlshortener.customurlshortener.dto.response.SignUpResponse;
 import com.urlshortener.customurlshortener.model.User;
 
@@ -14,5 +14,5 @@ public interface UserService {
 
     User findUserByEmail(String email);
 
-    ShortenedUrlResponse shortenUrl(BuildUrlRequest buildUrlRequest);
+    ModifiedUrlResponse shortenUrl(BuildUrlRequest buildUrlRequest);
 }

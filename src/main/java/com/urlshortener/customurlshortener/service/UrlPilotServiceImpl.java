@@ -1,17 +1,18 @@
 package com.urlshortener.customurlshortener.service;
 
 import com.urlshortener.customurlshortener.dto.requests.BuildUrlRequest;
-import com.urlshortener.customurlshortener.dto.response.ShortenedUrlResponse;
+import com.urlshortener.customurlshortener.dto.response.ModifiedUrlResponse;
+import com.urlshortener.customurlshortener.exceptions.ImproperUrlException;
 import com.urlshortener.customurlshortener.exceptions.UrlNotFoundException;
 import com.urlshortener.customurlshortener.factory.UrlFactory;
 import com.urlshortener.customurlshortener.model.Url;
-import com.urlshortener.customurlshortener.model.User;
 import com.urlshortener.customurlshortener.repositorie.UrlRepositories;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.urlshortener.customurlshortener.model.CustomMessage.IMPROPER_URL_EXCEPTION;
 import static com.urlshortener.customurlshortener.model.CustomMessage.URL_NOT_FOUND;
 
 @Service
@@ -19,38 +20,34 @@ import static com.urlshortener.customurlshortener.model.CustomMessage.URL_NOT_FO
 public class UrlPilotServiceImpl implements UrlService {
 
     private final UrlFactory urlFactory;
-    private final UserService userService;
-
     private final UrlRepositories urlRepositories;
     @Override
-    public ShortenedUrlResponse shortenUrl(String actualUrlLink) {
-
+    public ModifiedUrlResponse shortenUrl(String actualUrlLink) {
+        checkUrlIsValid(actualUrlLink);
         String replacementUrl = urlFactory.shortenUrl();
 
         Url url = urlFactory.buildUrl(actualUrlLink, replacementUrl);
-
         Url savedUrl = urlRepositories.save(url);
 
-     return buildShortenedUrlResponse(savedUrl);
+     return buildModifiedUrlResponse(savedUrl);
     }
     @Override
-    public ShortenedUrlResponse shortenUrl(BuildUrlRequest buildUrlRequest) {
+    public ModifiedUrlResponse shortenUrl(BuildUrlRequest buildUrlRequest, String userId) {
 
         String replacementUrl = urlFactory.shortenUrl();
         buildUrlRequest.setUrlReplacementLink(replacementUrl);
-        User user = userService.findUserByEmail(buildUrlRequest.getEmail());
 
         Url url = urlFactory.buildUrl(buildUrlRequest);
         url.setDate();
-        url.setUserId(user.getId());
+        url.setUserId(userId);
 
         Url savedUrl = urlRepositories.save(url);
 
-        return buildShortenedUrlResponse(savedUrl) ;
+        return buildModifiedUrlResponse(savedUrl) ;
     }
 
-    private static ShortenedUrlResponse buildShortenedUrlResponse(Url savedUrl) {
-        ShortenedUrlResponse shortenedUrlResponse = new ShortenedUrlResponse();
+    private static ModifiedUrlResponse buildModifiedUrlResponse(Url savedUrl) {
+        ModifiedUrlResponse shortenedUrlResponse = new ModifiedUrlResponse();
         shortenedUrlResponse.setCompleteUrl(savedUrl.getActualUrlLink());
         shortenedUrlResponse.setReplacedUrl(savedUrl.getUrlReplacementLink());
         return shortenedUrlResponse;
@@ -68,14 +65,21 @@ public class UrlPilotServiceImpl implements UrlService {
     }
 
     @Override
-    public ShortenedUrlResponse customizeUrl(String actualUrlLink, String customizedUrlChoice) {
-        urlFactory.checkUrlIsUrlFree(customizedUrlChoice);
+    public ModifiedUrlResponse customizeUrl(String actualUrlLink, String customizedUrlChoice) {
+        checkUrlIsValid(actualUrlLink);
+        urlFactory.checkUrlIsFreeForUse(customizedUrlChoice);
 
         Url url = urlFactory.buildUrl(actualUrlLink, customizedUrlChoice);
 
         Url savedUrl = urlRepositories.save(url);
 
-        return null;
+        return buildModifiedUrlResponse(savedUrl);
+    }
+
+    private void checkUrlIsValid(String actualUrlLink) {
+        boolean isValid = actualUrlLink.startsWith("http://") || actualUrlLink.startsWith("https://");
+        if (!isValid)
+            throw new ImproperUrlException(IMPROPER_URL_EXCEPTION.getMessage());
     }
 
 

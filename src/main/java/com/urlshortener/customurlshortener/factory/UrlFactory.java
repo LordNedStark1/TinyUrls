@@ -9,6 +9,7 @@ import com.urlshortener.customurlshortener.repositorie.UrlRepositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
 
@@ -69,6 +70,7 @@ public class UrlFactory {
     public Url buildUrl(BuildUrlRequest buildUrlRequest) {
         return Url.builder()
                 .actualUrlLink(buildUrlRequest.getActualUrlLink())
+                .date(LocalDate.now())
                 .urlReplacementLink(buildUrlRequest.getUrlReplacementLink())
                 .description(buildUrlRequest.getDescription())
                 .build();
@@ -79,7 +81,7 @@ public class UrlFactory {
                 .urlReplacementLink(replacementUrl)
                 .build();
     }
-    public void checkUrlIsUrlFree(String customUrl) {
+    public void checkUrlIsFreeForUse(String customUrl) {
 
         urlRepositories
                 .findUrlByUrlReplacementLink(customUrl)

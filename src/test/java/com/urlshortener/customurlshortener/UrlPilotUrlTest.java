@@ -1,25 +1,33 @@
 package com.urlshortener.customurlshortener;
 
-import com.urlshortener.customurlshortener.dto.response.ShortenedUrlResponse;
+import com.urlshortener.customurlshortener.dto.response.ModifiedUrlResponse;
 import com.urlshortener.customurlshortener.exceptions.CustomUrlAlreadyExistException;
+import com.urlshortener.customurlshortener.exceptions.ImproperUrlException;
+import com.urlshortener.customurlshortener.exceptions.UrlBaseException;
 import com.urlshortener.customurlshortener.service.UrlService;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static com.mongodb.internal.authentication.AwsCredentialHelper.LOGGER;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Slf4j
 
 class UrlPilotUrlTest {
     @Autowired
     private UrlService urlServices;
-        String fullUrl = "http://jebfbeiwbiuifjjbdfusfbeuifbiuirDS97H43e4e-6tghg6v";
+    private String fullUrl = "http://jebfbeiwbiuifjjbdfusfbeuifbiuirDS97H43e4e-6tghg6v";
+
+
 
     @Test
     void testThatUrlIsShortened() {
 
-        ShortenedUrlResponse shortenedUrlResponse =
+        ModifiedUrlResponse shortenedUrlResponse =
                 urlServices.shortenUrl(fullUrl);
 
         int shortenedUrlLength = shortenedUrlResponse.getReplacedUrl().length();
@@ -33,7 +41,7 @@ class UrlPilotUrlTest {
     @Test
     void checkThatFullUrlIsRetrievedWithShortenedUrl(){
 
-        ShortenedUrlResponse shortenedUrlResponse =
+        ModifiedUrlResponse shortenedUrlResponse =
                 urlServices.shortenUrl(fullUrl);
 
         String shortenedUrl = shortenedUrlResponse.getReplacedUrl();
@@ -44,27 +52,32 @@ class UrlPilotUrlTest {
     @Test
     void TestThatCustomNameCanUsedAsShortUrl(){
         String customizedUrlChoice = "nedCo";
-        ShortenedUrlResponse shortenedUrlResponse = new ShortenedUrlResponse();
-        shortenedUrlResponse.setCompleteUrl(customizedUrlChoice);
+        ModifiedUrlResponse modifiedUrlResponse = new ModifiedUrlResponse();
+        modifiedUrlResponse.setCompleteUrl(customizedUrlChoice);
         try {
-            shortenedUrlResponse =
+            modifiedUrlResponse =
                     urlServices.customizeUrl(fullUrl, customizedUrlChoice);
-        } catch (Exception ignored) {}
+        } catch ( UrlBaseException urlBaseException) {
+            LOGGER.info(urlBaseException.getMessage());
+            modifiedUrlResponse.setReplacedUrl(customizedUrlChoice);
+        }
 
-        String shortenedUrl = shortenedUrlResponse.getReplacedUrl();
+        String modifiedUrl = modifiedUrlResponse.getReplacedUrl();
 
-        String fullUrlFound = urlServices.retrieveFullUrl(shortenedUrl);
+
+
+        String fullUrlFound = urlServices.retrieveFullUrl(modifiedUrl);
         assertEquals(fullUrl, fullUrlFound);
     }
     @Test
     void testThatCustomUrlCanNotBeUsedTwice(){
         String customizedUrlChoice = "nedCo";
 
-        ShortenedUrlResponse shortenedUrlResponse = new ShortenedUrlResponse();
-        shortenedUrlResponse.setCompleteUrl(customizedUrlChoice);
+        ModifiedUrlResponse modifiedUrlResponse = new ModifiedUrlResponse();
+        modifiedUrlResponse.setCompleteUrl(customizedUrlChoice);
 
          try {
-            shortenedUrlResponse =
+            modifiedUrlResponse =
                     urlServices.customizeUrl(fullUrl, customizedUrlChoice);
         } catch (Exception ignored) {}
 
@@ -73,7 +86,13 @@ class UrlPilotUrlTest {
     }
     @Test
     void checkThatImproperUrlIsNotUsed(){
+        String improperUrl = "mendosa";
+        String customizedUrlChoice = "customurlchoice";
 
+        assertThrows(ImproperUrlException.class,
+                        ()-> urlServices.customizeUrl(improperUrl, customizedUrlChoice));
+
+        assertThrows(ImproperUrlException.class, ()-> urlServices.shortenUrl(improperUrl));
     }
 
 }

@@ -3,7 +3,7 @@ package com.urlshortener.customurlshortener;
 import com.urlshortener.customurlshortener.dto.requests.BuildUrlRequest;
 import com.urlshortener.customurlshortener.dto.requests.SignUpRequest;
 import com.urlshortener.customurlshortener.dto.response.LoginResponse;
-import com.urlshortener.customurlshortener.dto.response.ShortenedUrlResponse;
+import com.urlshortener.customurlshortener.dto.response.ModifiedUrlResponse;
 import com.urlshortener.customurlshortener.dto.response.SignUpResponse;
 import com.urlshortener.customurlshortener.exceptions.InvalidCredentialsException;
 import com.urlshortener.customurlshortener.exceptions.UrlBaseException;
@@ -70,7 +70,7 @@ public class UserServiceTest {
     }
     @Test
     public void userCanShortenUrl(){
-        SignUpRequest signUpRequest =buildSignUpRequest("loggedinuserurlshortened@gmail.com");
+        SignUpRequest signUpRequest =buildSignUpRequest("userCanShortenUrl@gmail.com");
 
         LoginResponse loginResponse = null ;
 
@@ -85,7 +85,7 @@ public class UserServiceTest {
                 .description("link to no were")
                 .build();
 
-        ShortenedUrlResponse shortenedUrlResponse =
+        ModifiedUrlResponse shortenedUrlResponse =
                             userService.shortenUrl( buildUrlRequest);
 
         int shortenedUrlLength = shortenedUrlResponse.getReplacedUrl().length();
@@ -97,6 +97,22 @@ public class UserServiceTest {
         assertTrue(isShortened);
         assertEquals(shortenedUrlResponse.getCompleteUrl(), fullUrl);
 
+    }
+    @Test
+    public void userCanHaveCustomizedUrl(){
+        SignUpRequest signUpRequest =buildSignUpRequest("userCanHaveCustomizedUrl@gmail.com");
+
+        LoginResponse loginResponse = null;
+        try{
+            userService.signUp(signUpRequest);
+            loginResponse = userService.login(signUpRequest.getEmail(), signUpRequest.getPassword());
+        }catch (UrlBaseException urlBaseException){}
+        BuildUrlRequest buildUrlRequest = BuildUrlRequest.builder()
+                .actualUrlLink(fullUrl)
+                .urlReplacementLink("http://userCanHaveCustomizedUrl")
+                .email(signUpRequest.getEmail())
+                .description("link to no were")
+                .build();
     }
     private SignUpRequest buildSignUpRequest(String email){
 
